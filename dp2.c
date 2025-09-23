@@ -11,16 +11,34 @@ float dpunroll(long N, float *pA, float *pB) {
   return R; 
 }
 
+float arithmetic_mean(float* measurements, int num_measurements){
+  float agg = 0.0;
+  for (int i = 0; i < num_measurements; i++){
+    agg += measurements[i];
+  }
+  return agg / num_measurements;
+}
+
+float harmonic_mean(float* measurements, int num_measurements){
+  float agg = 0.0;
+  for (int i = 0; i < num_measurements; i++){
+    agg += (1 / measurements[i]);
+  }
+  return num_measurements / agg;
+}
+
 int main(int argc, char * argv[]){
     if (argc < 3) {
         printf("Insufficient arguments.  Please provide input for vector size and number of measurements\n");
         return 0;
     }
-    int n, num_measurements;
-    num_measurements = atoi(argv[2]);
+    int n, num_trials, num_measurements;
+    num_trials = atoi(argv[2]);
+    num_measurements = num_trials / 2;
     n = atoi(argv[1]);
-    printf("Vector Size: %d, Number of Measurements: %d\n", n, num_measurements);
+    printf("Vector Size: %d, Number of Trials: %d\n", n, num_trials);
 
+    float* measuerments = malloc(sizeof(float) * (num_measurements));
     float* pA = malloc(sizeof(float) * n);
     float* pB = malloc(sizeof(float) * n);
     for (int i = 0; i < n; i++){
@@ -31,22 +49,21 @@ int main(int argc, char * argv[]){
     double total_time_spent = 0.0;
     double time_spent = 0.0;
     struct timespec start, end;
-    for (int i = 0; i < num_measurements; i++){
+    for (int i = 0; i < num_trials; i++){
         clock_gettime(CLOCK_REALTIME, &start);
         volatile float result = dpunroll(n, pA, pB);
         clock_gettime(CLOCK_REALTIME, &end);
         time_spent = (end.tv_sec - start.tv_sec) + (end.tv_nsec - start.tv_nsec) / 1000000000.0;
         printf("Time Spent on iteration %d: %f\n", i, time_spent);
-        if (i >= num_measurements / 2){
+        if (i >= num_measurements){
+          measuerments[i - num_measurements] = time_spent;
           total_time_spent += time_spent;
         }
     }
-    double average_time_spent = total_time_spent / (num_measurements / 2);
-    printf("Time Spent on 2nd half of experiments.  Total: %f, Average: %f\n", total_time_spent, average_time_spent);
-    // 9 ops per iteration.  n/4 iterations
-    printf("FLOP(s): %f\n", 9*(n/4.0) / average_time_spent);
-    // 8 floats processed per iteration.  n/4 iterations
-    printf("GB(s): %f\n", (8*sizeof(float)*(n/4.0) / average_time_spent) / 1000000000.0);
-    
-
+    printf("Time Spent on 2nd half of experiments.  Total: %f, Arithmetic Average: %f\n", total_time_spent, arithmetic_mean(measuerments, num_measurements));
+    // One multiplication and addition per element in array.
+    printf("FLOP(s) Harmonic Mean: %f \n",  9*(n/4.0)/harmonic_mean(measuerments, num_measurements));
+    // Two floats processed per element.
+    printf("GB(s) Harmonic Mean:%f\n",
+         8*sizeof(float)*(n/4.0)/harmonic_mean(measuerments, num_measurements) / 1000000000.0);
 }
