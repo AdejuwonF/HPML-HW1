@@ -34,7 +34,7 @@ def main():
             total_time_spent += time_elapsed
             measurements.append(time_elapsed)
     average_time_spent = statistics.fmean(measurements)
-    print("Time Spent on 2nd half of experiments.  Total: {0}, Average: {1}".format(total_time_spent, average_time_spent));
+    print("Time Spent on 2nd half of experiments.  Total: {0}, Arithmetic Average: {1}".format(total_time_spent, average_time_spent));
     #  One multiplication and addition per element in array.
     print("FLOP(s) Harmonic Mean: {0}".format(2*n/statistics.harmonic_mean(measurements)));
     #  Two floats processed per element.
