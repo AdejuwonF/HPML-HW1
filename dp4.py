@@ -24,9 +24,10 @@ def main():
     measurements = []
     time_elapsed = 0
     total_time_spent = 0
+    product = 0
     for i in range(num_trials):
         start_time = time.perf_counter()
-        dp(n, A, B)
+        product = dp(n, A, B)
         end_time = time.perf_counter()
         time_elapsed = end_time - start_time
         print("Time spend on iteration {0}: {1}".format(i, time_elapsed))
@@ -39,6 +40,7 @@ def main():
     print("FLOP(s) Harmonic Mean: {0}".format(2*n/statistics.harmonic_mean(measurements)));
     #  Two floats processed per element.
     print("GB(s) Harmonic Mean: {0}".format((2*4*n / statistics.harmonic_mean(measurements)) / 1000000000.0));
+    print("Result: {0}":.format(product))
     
 if __name__ == "__main__":
     main()

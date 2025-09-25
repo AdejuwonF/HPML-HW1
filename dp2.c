@@ -49,9 +49,10 @@ int main(int argc, char * argv[]){
     double total_time_spent = 0.0;
     double time_spent = 0.0;
     struct timespec start, end;
+    volatile float product;
     for (int i = 0; i < num_trials; i++){
         clock_gettime(CLOCK_REALTIME, &start);
-        volatile float result = dpunroll(n, pA, pB);
+        product = dpunroll(n, pA, pB);
         clock_gettime(CLOCK_REALTIME, &end);
         time_spent = (end.tv_sec - start.tv_sec) + (end.tv_nsec - start.tv_nsec) / 1000000000.0;
         printf("Time Spent on iteration %d: %f\n", i, time_spent);
@@ -62,8 +63,9 @@ int main(int argc, char * argv[]){
     }
     printf("Time Spent on 2nd half of experiments.  Total: %f, Arithmetic Average: %f\n", total_time_spent, arithmetic_mean(measuerments, num_measurements));
     // One multiplication and addition per element in array.
-    printf("FLOP(s) Harmonic Mean: %f \n",  9*(n/4.0)/harmonic_mean(measuerments, num_measurements));
+    printf("FLOP(s) Harmonic Mean: %f \n",  8*(n/4.0)/harmonic_mean(measuerments, num_measurements));
     // Two floats processed per element.
     printf("GB(s) Harmonic Mean:%f\n",
          8*sizeof(float)*(n/4.0)/harmonic_mean(measuerments, num_measurements) / 1000000000.0);
+    printf("Result: %f\n", product);
 }

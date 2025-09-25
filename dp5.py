@@ -22,9 +22,10 @@ def main():
     time_elapsed = 0
     total_time_spent = 0
     measurements = []
+    product = 0
     for i in range(num_trials):
         start_time = time.perf_counter()
-        dp(A, B)
+        product = dp(A, B)
         end_time = time.perf_counter()
         time_elapsed = end_time - start_time
         print("Time spend on iteration {0}: {1}".format(i, time_elapsed))
@@ -32,11 +33,11 @@ def main():
             total_time_spent += time_elapsed
             measurements.append(time_elapsed)
     average_time_spent = statistics.fmean(measurements)
-    print("Time Spent on 2nd half of experiments.  Total: {0}, Arithmetic Average: {1}".format(total_time_spent, average_time_spent));
+    print("Time Spent on 2nd half of experiments.  Total: {0}, Arithmetic Average: {1}".format(total_time_spent, average_time_spent))
     #  One multiplication and addition per element in array.
-    print("FLOP(s) Harmonic Mean: {0}".format(2*n/statistics.harmonic_mean(measurements)));
+    print("FLOP(s) Harmonic Mean: {0}".format(2*n/statistics.harmonic_mean(measurements)))
     #  Two floats processed per element.
-    print("GB(s) Harmonic Mean: {0}".format((2*4*n / statistics.harmonic_mean(measurements)) / 1000000000.0));
-    
+    print("GB(s) Harmonic Mean: {0}".format((2*4*n / statistics.harmonic_mean(measurements)) / 1000000000.0))
+    print("Result: {0}".format(product))
 if __name__ == "__main__":
     main()
