@@ -36,7 +36,7 @@ int main(int argc, char * argv[]){
     num_trials = atoi(argv[2]);
     num_measurements = num_trials / 2;
     n = atoi(argv[1]);
-    printf("Vector Size: %d, Number of Trials: %d\n", n, num_trials);
+    //printf("Vector Size: %d, Number of Trials: %d\n", n, num_trials);
 
     float* measuerments = malloc(sizeof(float) * (num_measurements));
     float* pA = malloc(sizeof(float) * n);
@@ -55,17 +55,22 @@ int main(int argc, char * argv[]){
         product = dpunroll(n, pA, pB);
         clock_gettime(CLOCK_REALTIME, &end);
         time_spent = (end.tv_sec - start.tv_sec) + (end.tv_nsec - start.tv_nsec) / 1000000000.0;
-        printf("Time Spent on iteration %d: %f\n", i, time_spent);
+        //printf("Time Spent on iteration %d: %f\n", i, time_spent);
         if (i >= num_measurements){
           measuerments[i - num_measurements] = time_spent;
           total_time_spent += time_spent;
         }
     }
-    printf("Time Spent on 2nd half of experiments.  Total: %f, Arithmetic Average: %f\n", total_time_spent, arithmetic_mean(measuerments, num_measurements));
-    // One multiplication and addition per element in array.
-    printf("FLOP(s) Harmonic Mean: %f \n",  8*(n/4.0)/harmonic_mean(measuerments, num_measurements));
-    // Two floats processed per element.
-    printf("GB(s) Harmonic Mean:%f\n",
-         8*sizeof(float)*(n/4.0)/harmonic_mean(measuerments, num_measurements) / 1000000000.0);
-    printf("Result: %f\n", product);
+    // printf("Time Spent on 2nd half of experiments.  Total: %f, Arithmetic Average: %f\n", total_time_spent, arithmetic_mean(measuerments, num_measurements));
+    // // One multiplication and addition per element in array.
+    // printf("FLOP(s) Harmonic Mean: %f \n",  8*(n/4.0)/harmonic_mean(measuerments, num_measurements));
+    // // Two floats processed per element.
+    // printf("GB(s) Harmonic Mean:%f\n",
+    //      8*sizeof(float)*(n/4.0)/harmonic_mean(measuerments, num_measurements) / 1000000000.0);
+    // printf("Result: %f\n", product);
+    printf("N: %d <T>: %f sec  B: %f GB/sec   F: %f FLOP/sec\n", 
+            n,
+            arithmetic_mean(measuerments, num_measurements), 
+            2*sizeof(float)*n/harmonic_mean(measuerments, num_measurements) / 1000000000.0,
+            2*n/harmonic_mean(measuerments, num_measurements));
 }

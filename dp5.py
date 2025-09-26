@@ -15,7 +15,7 @@ def main():
         return
     n = int(sys.argv[1])
     num_trials = int(sys.argv[2])
-    print("Running experiment with vector size {0} for {1} trials".format(n, num_trials))
+    # print("Running experiment with vector size {0} for {1} trials".format(n, num_trials))
 
     A = np.ones(n,dtype=np.float32)
     B = np.ones(n,dtype=np.float32)
@@ -28,16 +28,21 @@ def main():
         product = dp(A, B)
         end_time = time.perf_counter()
         time_elapsed = end_time - start_time
-        print("Time spend on iteration {0}: {1}".format(i, time_elapsed))
+        # print("Time spend on iteration {0}: {1}".format(i, time_elapsed))
         if (i >= num_trials/2):
             total_time_spent += time_elapsed
             measurements.append(time_elapsed)
     average_time_spent = statistics.fmean(measurements)
-    print("Time Spent on 2nd half of experiments.  Total: {0}, Arithmetic Average: {1}".format(total_time_spent, average_time_spent))
-    #  One multiplication and addition per element in array.
-    print("FLOP(s) Harmonic Mean: {0}".format(2*n/statistics.harmonic_mean(measurements)))
-    #  Two floats processed per element.
-    print("GB(s) Harmonic Mean: {0}".format((2*4*n / statistics.harmonic_mean(measurements)) / 1000000000.0))
-    print("Result: {0}".format(product))
+    # print("Time Spent on 2nd half of experiments.  Total: {0}, Arithmetic Average: {1}".format(total_time_spent, average_time_spent))
+    # #  One multiplication and addition per element in array.
+    # print("FLOP(s) Harmonic Mean: {0}".format(2*n/statistics.harmonic_mean(measurements)))
+    # #  Two floats processed per element.
+    # print("GB(s) Harmonic Mean: {0}".format((2*4*n / statistics.harmonic_mean(measurements)) / 1000000000.0))
+    # print("Result: {0}".format(product))
+    print("N: {0} <T>: {1} sec  B: {2} GB/sec   F: {3} FLOP/sec".format( 
+            n,
+            statistics.fmean(measurements), 
+            2*4*n/statistics.harmonic_mean(measurements) / 1000000000.0,
+            2*n/statistics.harmonic_mean(measurements)))
 if __name__ == "__main__":
     main()
